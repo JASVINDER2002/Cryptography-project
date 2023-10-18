@@ -1,0 +1,219 @@
+import tkinter as tk
+from string import ascii_uppercase as alphabet
+def codes_table(char):
+    table = {
+        "A": 11, "B": 41, "C": 35, "D": 34, "E": 33,
+        "F": 12, "G": 42, "H": 54, "I": 53, "K": 32,
+        "L": 13, "M": 43, "N": 55, "O": 52, "P": 31,
+        "Q": 14, "R": 44, "S": 45, "T": 51, "U": 25,
+        "V": 15, "W": 21, "X": 22, "Y": 23, "Z": 24, "J": 0,
+
+        11: "A", 41: "B", 35: "C", 34: "D", 33: "E",
+        12: "F", 42: "G", 54: "H", 53: "I", 32: "K",
+        13: "L", 43: "M", 55: "N", 52: "O", 31: "P",
+        14: "Q", 44: "R", 45: "S", 51: "T", 25: "U",
+        15: "V", 21: "W", 22: "X", 23: "Y", 24: "Z", 0: "J"
+    }
+
+    return table[char]
+
+
+def decoding(text):
+    text, finished_text = text.upper(), ""
+    for symbol in list(map(int, text.split())):
+        finished_text += codes_table(symbol)
+
+    return finished_text
+
+
+
+#keyword=str(input("ENTRE THE KEY:-"))
+#decryptedtext = vigenere_cipher_decrypt(ciphertext,keyword)
+#print(decryptedtext)
+def Decryption_Caesar(message, key):
+    decrypted_message = ' '
+
+    for letter in message:
+
+        if letter.isupper():
+
+            # check if it's an uppercase character and then we transport it
+            letter_index = ord(letter) - ord('A')
+            letter_shifted = (letter_index - key) % 26 + ord('A')
+
+            letter_new = chr(letter_shifted)
+            decrypted_message += letter_new
+
+        elif letter.islower():
+
+            # check if it's an lowercase character and then we transport it
+            letter_index = ord(letter) - ord('a')
+            letter_shifted = (letter_index - key) % 26 + ord('a')
+
+            letter_new = chr(letter_shifted)
+            decrypted_message += letter_new
+
+        elif letter.isdigit():
+
+            """
+            Check if it's a number
+            If it's a number then it shift it the key value
+            For example if we have the number 3 and our key is 5 then the new number will be 8
+            """
+
+            letter_new = (int(letter) - key) % 10
+            decrypted_message += str(letter_new)
+
+        elif letter.isspace():
+
+            decrypted_message += ' '
+
+        else:
+
+            """
+            Check if it's a punctuation
+            The total number of the punctuation are 32
+            If it's a number then it shift it the key value
+            If you are confused check the ascii table
+            """
+
+            letter_index = ord(letter) - ord('!')
+            letter_shifted = (letter_index - key) % 32 + ord('!')
+            letter_new = chr(letter_shifted)
+            decrypted_message += letter_new
+
+    return decrypted_message
+
+
+
+def Decryption_command():
+    text = entry.get()
+    message = decoding(text)
+    key=int(entry1.get())
+    plain_text = Decryption_Caesar(message,key)
+    greeting_label.config(text=f"{plain_text}")
+
+# Function to display a greeting message
+def Encryption_command():
+    message= entry.get()  # Get the name from the entry field
+    key =int(entry1.get())
+    ultimate_ciphertext=Encryption_Caesar(message,key)
+    finished_text =encoding(ultimate_ciphertext)
+    greeting_label.config(text=f"{finished_text}")  # Set the greeting message
+
+
+def Encryption_Caesar(message, key):
+    encrypted_message = ' '
+
+    for letter in message:
+        # Here we check if a letter is uppercase and then we transport it
+        if letter.isupper():
+
+            letter_index = ord(letter) - ord('A')
+            letter_shifted = (letter_index + key) % 26 + ord('A')
+
+            letter_new = chr(letter_shifted)
+            encrypted_message += letter_new
+
+        # Here we check if a letter is lowercase
+        elif letter.islower():
+
+            # check if it's an lowercase character and then we transport it
+            letter_index = ord(letter) - ord('a')
+            letter_shifted = (letter_index + key) % 26 + ord('a')
+
+            letter_new = chr(letter_shifted)
+            encrypted_message += letter_new
+
+        # Here we check if we have a digit and then we transport it
+        elif letter.isdigit():
+
+            """
+            If it's a number then we shift it the key value
+            For example if we have the number 3 and our key is 5 then the new number will be 8
+            """
+
+            letter_new = (int(letter) + key) % 10
+            encrypted_message += str(letter_new)
+
+        elif letter.isspace():
+
+            encrypted_message += ' '
+
+        # Here we check if we have a punctuation and then we transport it
+        else:
+
+            """"
+            The total number of the punctuation are 32
+            It shifts the punctuation key values according to ASCII table
+            If you are confused check the ASCII table
+            """
+
+            letter_index = ord(letter) - ord('!')
+            letter_shifted = (letter_index + key) % 32 + ord('!')
+            letter_new = chr(letter_shifted)
+            encrypted_message += letter_new
+
+    return encrypted_message
+    
+def encoding(text):
+    text, finished_text = text.upper(), ""
+    for symbol in text:
+        if symbol in alphabet:
+            finished_text += str(codes_table(symbol)) + " "
+
+    return finished_text
+
+def codes_table(char):
+    table = {
+        "A": 11, "B": 41, "C": 35, "D": 34, "E": 33,
+        "F": 12, "G": 42, "H": 54, "I": 53, "K": 32,
+        "L": 13, "M": 43, "N": 55, "O": 52, "P": 31,
+        "Q": 14, "R": 44, "S": 45, "T": 51, "U": 25,
+        "V": 15, "W": 21, "X": 22, "Y": 23, "Z": 24, "J": 0,
+
+        11: "A", 41: "B", 35: "C", 34: "D", 33: "E",
+        12: "F", 42: "G", 54: "H", 53: "I", 32: "K",
+        13: "L", 43: "M", 55: "N", 52: "O", 31: "P",
+        14: "Q", 44: "R", 45: "S", 51: "T", 25: "U",
+        15: "V", 21: "W", 22: "X", 23: "Y", 24: "Z", 0: "J"
+    }
+
+    return table[char]    
+    
+
+
+# Create a Tkinter window
+window = tk.Tk()
+window.geometry("500x500")
+window.title("Greeting App")
+
+
+
+instruction_label0 = tk.Label(window, text="Enter the public key::")
+instruction_label0.pack()
+
+entry1 = tk.Entry(window)
+entry1.pack()
+# Create a label for instructions
+instruction_label = tk.Label(window, text="Enter the plain text:")
+instruction_label.pack()
+
+# Create an entry field for the user's name
+entry = tk.Entry(window)
+entry.pack()
+
+# Create a button to submit the name
+submit_button = tk.Button(window, text="Encrypt", command=Encryption_command)
+submit_button.pack()
+
+
+submit_button1 = tk.Button(window, text="Decrypt", command=Decryption_command)
+submit_button1.pack()
+
+# Create a label to display the greeting message
+greeting_label = tk.Label(window, text="")
+greeting_label.pack()
+
+# Start the Tkinter main loop
+window.mainloop()
