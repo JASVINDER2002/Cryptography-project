@@ -1,0 +1,224 @@
+from flask import Flask, render_template, request
+from string import ascii_uppercase as alphabet
+
+app = Flask(__name__)
+
+
+def egcd(a, b):
+    x, y, u, v = 0, 1, 1, 0
+    while a != 0:
+        q, r = b // a, b % a
+        m, n = x - u * q, y - v * q
+        b, a, x, y, u, v = a, r, u, v, m, n
+    gcd = b
+    return gcd, x, y
+
+
+"""
+Modular Multiplicative Inverse Function
+"""
+
+def modinv(a, m):
+    gcd, x, y = egcd(a, m)
+    if gcd != 1:
+        return None  # modular inverse does not exist
+    else:
+        return x % m
+        
+def codes_table(char):
+    table = {
+        "A": 11, "B": 41, "C": 35, "D": 34, "E": 33,
+        "F": 12, "G": 42, "H": 54, "I": 53, "K": 32,
+        "L": 13, "M": 43, "N": 55, "O": 52, "P": 31,
+        "Q": 14, "R": 44, "S": 45, "T": 51, "U": 25,
+        "V": 15, "W": 21, "X": 22, "Y": 23, "Z": 24, "J": 0,
+
+        11: "A", 41: "B", 35: "C", 34: "D", 33: "E",
+        12: "F", 42: "G", 54: "H", 53: "I", 32: "K",
+        13: "L", 43: "M", 55: "N", 52: "O", 31: "P",
+        14: "Q", 44: "R", 45: "S", 51: "T", 25: "U",
+        15: "V", 21: "W", 22: "X", 23: "Y", 24: "Z", 0: "J"
+    }
+
+    return table[char]
+
+
+def decoding(text):
+    text, finished_text = text.upper(), ""
+    for symbol in list(map(int, text.split())):
+        finished_text += codes_table(symbol)
+
+    return finished_text
+
+#keyword=str(input("ENTRE THE KEY:-"))
+#decryptedtext = vigenere_cipher_decrypt(ciphertext,keyword)
+#print(decryptedtext)
+def Decryption_Caesar(message, key):
+    decrypted_message = ' '
+    numtoletter = decoding(message)
+    # return decrypted_message
+
+    for letter in numtoletter:
+
+        if letter.isupper():
+
+            # check if it's an uppercase character and then we transport it
+            letter_index = ord(letter) - ord('A')
+            letter_shifted = (letter_index - key) % 26 + ord('A')
+
+            letter_new = chr(letter_shifted)
+            decrypted_message += letter_new
+
+        elif letter.islower():
+
+            # check if it's an lowercase character and then we transport it
+            letter_index = ord(letter) - ord('a')
+            letter_shifted = (letter_index - key) % 26 + ord('a')
+
+            letter_new = chr(letter_shifted)
+            decrypted_message += letter_new
+
+        elif letter.isdigit():
+
+            """
+            Check if it's a number
+            If it's a number then it shift it the key value
+            For example if we have the number 3 and our key is 5 then the new number will be 8
+            """
+
+            letter_new = (int(letter) - key) % 10
+            decrypted_message += str(letter_new)
+
+        elif letter.isspace():
+
+            decrypted_message += ' '
+
+        else:
+
+            """
+            Check if it's a punctuation
+            The total number of the punctuation are 32
+            If it's a number then it shift it the key value
+            If you are confused check the ascii table
+            """
+
+            letter_index = ord(letter) - ord('!')
+            letter_shifted = (letter_index - key) % 32 + ord('!')
+            letter_new = chr(letter_shifted)
+            decrypted_message += letter_new
+
+    return decrypted_message
+
+
+
+def Encryption_Caesar(message, key):
+    mey = [key,34]
+    
+    encrypted_message = ' '
+    
+
+    for letter in message:
+        # Here we check if a letter is uppercase and then we transport it
+        if letter.isupper():
+
+            letter_index = ord(letter) - ord('A')
+            letter_shifted = (letter_index + key) % 26 + ord('A')
+
+            letter_new = chr(letter_shifted)
+            encrypted_message += letter_new
+
+        # Here we check if a letter is lowercase
+        elif letter.islower():
+
+            # check if it's an lowercase character and then we transport it
+            letter_index = ord(letter) - ord('a')
+            letter_shifted = (letter_index + key) % 26 + ord('a')
+
+            letter_new = chr(letter_shifted)
+            encrypted_message += letter_new
+
+        # Here we check if we have a digit and then we transport it
+        elif letter.isdigit():
+
+            """
+            If it's a number then we shift it the key value
+            For example if we have the number 3 and our key is 5 then the new number will be 8
+            """
+
+            letter_new = (int(letter) + key) % 10
+            encrypted_message += str(letter_new)
+
+        elif letter.isspace():
+
+            encrypted_message += ' '
+
+        # Here we check if we have a punctuation and then we transport it
+        else:
+
+            """"
+            The total number of the punctuation are 32
+            It shifts the punctuation key values according to ASCII table
+            If you are confused check the ASCII table
+            """
+
+            letter_index = ord(letter) - ord('!')
+            letter_shifted = (letter_index + key) % 32 + ord('!')
+            letter_new = chr(letter_shifted)
+            encrypted_message += letter_new
+    lettertonum = encoding(encrypted_message)
+            
+
+    return lettertonum
+    
+def encoding(text):
+    text, finished_text = text.upper(), ""
+    for symbol in text:
+        if symbol in alphabet:
+            finished_text += str(codes_table(symbol)) + " "
+
+    return finished_text
+
+
+def codes_table(char):
+    table = {
+        "A": 11, "B": 41, "C": 35, "D": 34, "E": 33,
+        "F": 12, "G": 42, "H": 54, "I": 53, "K": 32,
+        "L": 13, "M": 43, "N": 55, "O": 52, "P": 31,
+        "Q": 14, "R": 44, "S": 45, "T": 51, "U": 25,
+        "V": 15, "W": 21, "X": 22, "Y": 23, "Z": 24, "J": 0,
+
+        11: "A", 41: "B", 35: "C", 34: "D", 33: "E",
+        12: "F", 42: "G", 54: "H", 53: "I", 32: "K",
+        13: "L", 43: "M", 55: "N", 52: "O", 31: "P",
+        14: "Q", 44: "R", 45: "S", 51: "T", 25: "U",
+        15: "V", 21: "W", 22: "X", 23: "Y", 24: "Z", 0: "J"
+    }
+
+    return table[char]    
+       
+
+
+# Your encryption and decryption functions here...
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/encrypt', methods=['POST'])
+def encrypt():
+    message = request.form['message']
+    key = int(request.form['key'])
+    # Call your encryption function here
+    lettertonum = Encryption_Caesar(message, key)
+    return render_template('result.html', result=lettertonum)
+
+@app.route('/decrypt', methods=['POST'])
+def decrypt():
+    message = request.form['message']
+    key = int(request.form['key'])
+    # Call your decryption function here
+    decrypted_message = Decryption_Caesar(message, key)
+    return render_template('result.html', result=decrypted_message)
+
+if __name__ == '__main__':
+    app.run(debug=False)
